@@ -36,6 +36,7 @@ export default function Home() {
   const [url, setUrl] = useState("");
   const [transcript, setTranscript] = useState("");
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<Pack | null>(null);
 
@@ -46,6 +47,30 @@ export default function Home() {
   }, [transcript]);
 
   const youtubeId = useMemo(() => getYouTubeId(url.trim()), [url]);
+
+  async function onFetchTranscript() {
+    if (!url.trim()) return;
+    setFetching(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/transcript", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json?.error || "Failed to fetch transcript");
+      setTranscript(json.transcript);
+    } catch (e: unknown) {
+      const msg =
+        e && typeof e === "object" && "message" in e && typeof (e as { message?: unknown }).message === "string"
+          ? String((e as { message?: unknown }).message)
+          : "Failed to fetch transcript";
+      setError(msg);
+    } finally {
+      setFetching(false);
+    }
+  }
 
   async function onGenerate() {
     setLoading(true);
@@ -155,15 +180,28 @@ export default function Home() {
               </div>
 
               <div className="grid gap-4 md:grid-cols-5">
-                <label className="grid gap-2 md:col-span-3">
-                  <span className="text-sm font-medium text-white/80">YouTube URL (optional)</span>
+                <div className="grid gap-2 md:col-span-3">
+                  <div className="flex items-end justify-between gap-3">
+                    <span className="text-sm font-medium text-white/80">YouTube URL (optional)</span>
+                    <button
+                      type="button"
+                      onClick={onFetchTranscript}
+                      disabled={!youtubeId || fetching}
+                      className="text-xs font-semibold text-emerald-200 hover:text-emerald-100 disabled:opacity-50"
+                    >
+                      {fetching ? "Fetching transcript…" : "Fetch transcript"}
+                    </button>
+                  </div>
                   <input
                     className="h-11 rounded-lg border border-white/10 bg-black/20 px-3 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-emerald-300/40"
                     placeholder="https://www.youtube.com/watch?v=…"
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
                   />
-                </label>
+                  <p className="text-xs text-white/50">
+                    Works when the video has captions. If it fails, use YouTube “Show transcript” and paste manually.
+                  </p>
+                </div>
 
                 <div className="md:col-span-2">
                   <div className="text-sm font-medium text-white/80">Preview</div>

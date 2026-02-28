@@ -14,6 +14,7 @@
     "pngjs": "^7.0.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "youtube-transcript": "^1.2.1",
     "zod": "^4.3.6"
   },
   "devDependencies": {

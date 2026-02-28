@@ -2,6 +2,28 @@
 
 import { useMemo, useState } from "react";
 
+function getYouTubeId(raw: string): string | null {
+  try {
+    const u = new URL(raw);
+    if (u.hostname.includes("youtu.be")) {
+      const id = u.pathname.replace("/", "").trim();
+      return id || null;
+    }
+    if (u.hostname.includes("youtube.com")) {
+      const v = u.searchParams.get("v");
+      if (v) return v;
+      // /shorts/<id> or /embed/<id>
+      const parts = u.pathname.split("/").filter(Boolean);
+      const idx = parts.findIndex((p) => p === "shorts" || p === "embed");
+      if (idx >= 0 && parts[idx + 1]) return parts[idx + 1];
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+
 type Pack = {
   title?: string;
   key_points?: string[];
@@ -22,6 +44,8 @@ export default function Home() {
     const words = transcript.trim() ? transcript.trim().split(/\s+/).length : 0;
     return { chars, words };
   }, [transcript]);
+
+  const youtubeId = useMemo(() => getYouTubeId(url.trim()), [url]);
 
   async function onGenerate() {
     setLoading(true);
@@ -130,15 +154,42 @@ export default function Home() {
                 </div>
               </div>
 
-              <label className="grid gap-2">
-                <span className="text-sm font-medium text-white/80">YouTube URL (optional)</span>
-                <input
-                  className="h-11 rounded-lg border border-white/10 bg-black/20 px-3 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-emerald-300/40"
-                  placeholder="https://www.youtube.com/watch?v=…"
-                  value={url}
-                  onChange={(e) => setUrl(e.target.value)}
-                />
-              </label>
+              <div className="grid gap-4 md:grid-cols-5">
+                <label className="grid gap-2 md:col-span-3">
+                  <span className="text-sm font-medium text-white/80">YouTube URL (optional)</span>
+                  <input
+                    className="h-11 rounded-lg border border-white/10 bg-black/20 px-3 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-emerald-300/40"
+                    placeholder="https://www.youtube.com/watch?v=…"
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                  />
+                </label>
+
+                <div className="md:col-span-2">
+                  <div className="text-sm font-medium text-white/80">Preview</div>
+                  <div className="mt-2 overflow-hidden rounded-xl border border-white/10 bg-black/20">
+                    {youtubeId ? (
+                      <div className="aspect-video">
+                        <iframe
+                          className="h-full w-full"
+                          src={`https://www.youtube-nocookie.com/embed/${youtubeId}`}
+                          title="YouTube preview"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                          allowFullScreen
+                        />
+                      </div>
+                    ) : url.trim() ? (
+                      <div className="flex aspect-video items-center justify-center p-4 text-center text-xs text-white/60">
+                        Paste a valid YouTube link to show a preview.
+                      </div>
+                    ) : (
+                      <div className="flex aspect-video items-center justify-center p-4 text-center text-xs text-white/60">
+                        Add a link to preview the video here.
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
 
               <label className="grid gap-2">
                 <div className="flex items-end justify-between gap-4">

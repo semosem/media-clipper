@@ -63,19 +63,77 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-b from-[#23485f] via-[#1e3951] to-[#131e31] text-zinc-50">
       <main className="mx-auto w-full max-w-4xl px-4 py-10">
         <div className="mb-8">
-          <h1 className="text-3xl font-semibold tracking-tight">Video Clipper (internal)</h1>
-          <p className="mt-2 text-sm text-white/70">
-            Paste a transcript → generate a content pack (chapters, clips, hooks, posts). No clipping yet—Phase 1.
-          </p>
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center justify-between gap-4">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80">
+                <span className="h-2 w-2 rounded-full bg-emerald-400" />
+                <span>Content Pack Generator</span>
+              </div>
+              <div className="hidden items-center gap-2 text-xs text-white/60 md:flex">
+                <span className="rounded-full bg-white/10 px-3 py-1">48h turnaround</span>
+                <span className="rounded-full bg-white/10 px-3 py-1">Clips + posts</span>
+                <span className="rounded-full bg-white/10 px-3 py-1">Async</span>
+              </div>
+            </div>
+
+            <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">
+              Turn 1 long video into <span className="text-emerald-200">15 clips</span> + a week of posts.
+            </h1>
+            <p className="max-w-2xl text-sm leading-6 text-white/70 md:text-base">
+              Paste a transcript (or add a YouTube URL) and generate chapters, clip candidates, hooks, captions, and LinkedIn/X drafts. This started as an
+              internal tool — we’re packaging it as a paid service.
+            </p>
+
+            <div className="mt-2 flex flex-wrap items-center gap-3">
+              <a
+                href="#try"
+                className="inline-flex h-11 items-center justify-center rounded-lg bg-emerald-400/90 px-4 text-sm font-semibold text-black shadow-sm hover:bg-emerald-300"
+              >
+                Try the generator
+              </a>
+              <a
+                href="#service"
+                className="inline-flex h-11 items-center justify-center rounded-lg border border-white/15 bg-black/10 px-4 text-sm font-semibold text-white hover:bg-black/20"
+              >
+                See the 48h service
+              </a>
+              <span className="text-xs text-white/60">No calls. Async delivery via Google Doc + JSON.</span>
+            </div>
+          </div>
         </div>
 
         <div className="grid gap-6">
-          <section className="rounded-xl border border-white/10 bg-black/20 p-5 shadow-sm backdrop-blur">
+          <section className="grid gap-4 rounded-2xl border border-white/10 bg-white/5 p-5 shadow-sm backdrop-blur md:grid-cols-3">
+            <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+              <div className="text-sm font-semibold">Clip Map</div>
+              <p className="mt-1 text-sm text-white/70">12–20 timestamped moments with hooks + captions.</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+              <div className="text-sm font-semibold">Chapters</div>
+              <p className="mt-1 text-sm text-white/70">Clean structure for YouTube + repurposing.</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+              <div className="text-sm font-semibold">Posts</div>
+              <p className="mt-1 text-sm text-white/70">5 LinkedIn drafts + 10 X drafts from the same content.</p>
+            </div>
+          </section>
+
+          <section id="try" className="rounded-2xl border border-white/10 bg-black/20 p-6 shadow-sm backdrop-blur">
             <div className="grid gap-4">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <h2 className="text-lg font-semibold">Try it</h2>
+                  <p className="mt-1 text-sm text-white/70">Paste a transcript and generate your content pack.</p>
+                </div>
+                <div className="hidden text-xs text-white/60 md:block">
+                  <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">Internal tool → Service</span>
+                </div>
+              </div>
+
               <label className="grid gap-2">
-                <span className="text-sm font-medium">YouTube URL (optional)</span>
+                <span className="text-sm font-medium text-white/80">YouTube URL (optional)</span>
                 <input
-                  className="h-11 rounded-lg border border-zinc-200 bg-white px-3 text-sm outline-none focus:ring-2 focus:ring-zinc-300 dark:border-zinc-800 dark:bg-black dark:focus:ring-zinc-700"
+                  className="h-11 rounded-lg border border-white/10 bg-black/20 px-3 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-emerald-300/40"
                   placeholder="https://www.youtube.com/watch?v=…"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
@@ -84,13 +142,13 @@ export default function Home() {
 
               <label className="grid gap-2">
                 <div className="flex items-end justify-between gap-4">
-                  <span className="text-sm font-medium">Transcript (required)</span>
-                  <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                  <span className="text-sm font-medium text-white/80">Transcript (required)</span>
+                  <span className="text-xs text-white/50">
                     {transcriptStats.words.toLocaleString()} words · {transcriptStats.chars.toLocaleString()} chars
                   </span>
                 </div>
                 <textarea
-                  className="min-h-[220px] resize-y rounded-lg border border-zinc-200 bg-white p-3 text-sm leading-6 outline-none focus:ring-2 focus:ring-zinc-300 dark:border-zinc-800 dark:bg-black dark:focus:ring-zinc-700"
+                  className="min-h-[240px] resize-y rounded-lg border border-white/10 bg-black/20 p-3 text-sm leading-6 text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-emerald-300/40"
                   placeholder="Paste transcript here…"
                   value={transcript}
                   onChange={(e) => setTranscript(e.target.value)}
@@ -101,7 +159,7 @@ export default function Home() {
                 <button
                   onClick={onGenerate}
                   disabled={loading || transcript.trim().length < 200}
-                  className="inline-flex h-11 items-center justify-center rounded-lg bg-[#23485f] px-4 text-sm font-medium text-white shadow-sm hover:bg-[#1e3951] disabled:opacity-50"
+                  className="inline-flex h-11 items-center justify-center rounded-lg bg-emerald-400/90 px-4 text-sm font-semibold text-black shadow-sm hover:bg-emerald-300 disabled:opacity-50"
                 >
                   {loading ? "Generating…" : "Generate pack"}
                 </button>
@@ -109,7 +167,7 @@ export default function Home() {
                 <button
                   onClick={downloadJson}
                   disabled={!data}
-                  className="inline-flex h-11 items-center justify-center rounded-lg border border-white/15 bg-black/10 px-4 text-sm font-medium text-white disabled:opacity-50 hover:bg-black/20"
+                  className="inline-flex h-11 items-center justify-center rounded-lg border border-white/15 bg-black/10 px-4 text-sm font-semibold text-white disabled:opacity-50 hover:bg-black/20"
                 >
                   Download JSON
                 </button>
@@ -122,20 +180,18 @@ export default function Home() {
           </section>
 
           {data ? (
-            <section className="rounded-xl border border-white/10 bg-black/20 p-5 shadow-sm backdrop-blur">
+            <section className="rounded-2xl border border-white/10 bg-black/20 p-6 shadow-sm backdrop-blur">
               <div className="mb-4">
                 <h2 className="text-xl font-semibold">Output</h2>
                 {data.title ? (
-                  <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{data.title}</p>
+                  <p className="mt-1 text-sm text-white/70">{data.title}</p>
                 ) : null}
               </div>
 
               <div className="grid gap-6">
                 <div>
-                  <h3 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                    Key points
-                  </h3>
-                  <ul className="mt-2 list-disc space-y-1 pl-5 text-sm">
+                  <h3 className="text-sm font-semibold uppercase tracking-wide text-white/50">Key points</h3>
+                  <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-white/90">
                     {(data.key_points || []).map((p, i) => (
                       <li key={i}>{p}</li>
                     ))}
@@ -143,15 +199,11 @@ export default function Home() {
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                    Chapters
-                  </h3>
-                  <ul className="mt-2 space-y-1 text-sm">
+                  <h3 className="text-sm font-semibold uppercase tracking-wide text-white/50">Chapters</h3>
+                  <ul className="mt-2 space-y-1 text-sm text-white/90">
                     {(data.chapters || []).map((c, i) => (
                       <li key={i} className="flex gap-3">
-                        <span className="w-[72px] shrink-0 font-mono text-xs text-zinc-500 dark:text-zinc-400">
-                          {c.time || ""}
-                        </span>
+                        <span className="w-[72px] shrink-0 font-mono text-xs text-white/50">{c.time || ""}</span>
                         <span>{c.title}</span>
                       </li>
                     ))}
@@ -159,23 +211,21 @@ export default function Home() {
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                    Clip candidates
-                  </h3>
+                  <h3 className="text-sm font-semibold uppercase tracking-wide text-white/50">Clip candidates</h3>
                   <div className="mt-2 grid gap-3">
                     {(data.clips || []).map((c, i) => (
                       <div
                         key={i}
-                        className="rounded-lg border border-zinc-200 p-3 text-sm dark:border-zinc-800"
+                        className="rounded-xl border border-white/10 bg-black/10 p-4 text-sm"
                       >
-                        <div className="mb-1 flex flex-wrap items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400">
+                        <div className="mb-1 flex flex-wrap items-center gap-2 text-xs text-white/50">
                           <span className="font-mono">{c.start || ""}</span>
                           <span>→</span>
                           <span className="font-mono">{c.end || ""}</span>
                         </div>
                         <div className="font-medium">{c.hook}</div>
-                        <div className="mt-1 text-zinc-700 dark:text-zinc-300">{c.caption}</div>
-                        <div className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">{c.why}</div>
+                        <div className="mt-1 text-white/80">{c.caption}</div>
+                        <div className="mt-2 text-xs text-white/50">{c.why}</div>
                       </div>
                     ))}
                   </div>
@@ -183,14 +233,12 @@ export default function Home() {
 
                 <div className="grid gap-6 md:grid-cols-2">
                   <div>
-                    <h3 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                      LinkedIn (5)
-                    </h3>
+                    <h3 className="text-sm font-semibold uppercase tracking-wide text-white/50">LinkedIn (5)</h3>
                     <div className="mt-2 grid gap-3">
                       {(data.posts?.linkedin || []).map((p, i) => (
                         <pre
                           key={i}
-                          className="whitespace-pre-wrap rounded-lg border border-zinc-200 p-3 text-xs leading-5 dark:border-zinc-800"
+                          className="whitespace-pre-wrap rounded-xl border border-white/10 bg-black/10 p-4 text-xs leading-5 text-white/85"
                         >
                           {p}
                         </pre>
@@ -198,14 +246,12 @@ export default function Home() {
                     </div>
                   </div>
                   <div>
-                    <h3 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                      X (10)
-                    </h3>
+                    <h3 className="text-sm font-semibold uppercase tracking-wide text-white/50">X (10)</h3>
                     <div className="mt-2 grid gap-3">
                       {(data.posts?.x || []).map((p, i) => (
                         <pre
                           key={i}
-                          className="whitespace-pre-wrap rounded-lg border border-zinc-200 p-3 text-xs leading-5 dark:border-zinc-800"
+                          className="whitespace-pre-wrap rounded-xl border border-white/10 bg-black/10 p-4 text-xs leading-5 text-white/85"
                         >
                           {p}
                         </pre>
@@ -217,12 +263,67 @@ export default function Home() {
             </section>
           ) : null}
 
-          <section className="text-xs text-zinc-500 dark:text-zinc-400">
-            <p>
-              Setup: export <code className="font-mono">OPENAI_API_KEY</code> (optional: <code className="font-mono">OPENAI_MODEL</code>). Run:
-              <code className="ml-2 font-mono">npm run dev</code>
+          <section id="service" className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-sm backdrop-blur">
+            <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+              <div>
+                <h2 className="text-2xl font-semibold">48h Content Pack Service</h2>
+                <p className="mt-1 text-sm text-white/70">
+                  You send a video link (or file). We deliver a polished content pack + clip map. No calls.
+                </p>
+              </div>
+              <a
+                href="mailto:semosem@proton.me?subject=48h%20Content%20Pack%20Service&body=Video%20link%3A%20%0APlatform%20(YouTube%2FPodcast%2FOther)%3A%20%0AGoal%3A%20(Shorts%2FLinkedIn%2FLaunch)%0AAudience%3A%20%0A"
+                className="mt-2 inline-flex h-11 items-center justify-center rounded-lg bg-emerald-400/90 px-4 text-sm font-semibold text-black hover:bg-emerald-300 md:mt-0"
+              >
+                Request a pack
+              </a>
+            </div>
+
+            <div className="mt-6 grid gap-4 md:grid-cols-3">
+              <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+                <div className="text-sm font-semibold">Starter</div>
+                <div className="mt-1 text-2xl font-semibold">€99</div>
+                <ul className="mt-3 space-y-2 text-sm text-white/75">
+                  <li>• Key points + chapters</li>
+                  <li>• 12 clip candidates (hooks + captions)</li>
+                  <li>• 5 LinkedIn + 10 X drafts</li>
+                </ul>
+              </div>
+              <div className="rounded-xl border border-emerald-300/30 bg-emerald-400/10 p-4">
+                <div className="text-sm font-semibold">Pro</div>
+                <div className="mt-1 text-2xl font-semibold">€199</div>
+                <ul className="mt-3 space-y-2 text-sm text-white/75">
+                  <li>• Everything in Starter</li>
+                  <li>• 20 clip candidates + better hooks</li>
+                  <li>• 1 revision round</li>
+                </ul>
+              </div>
+              <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+                <div className="text-sm font-semibold">Done-for-you Clips</div>
+                <div className="mt-1 text-2xl font-semibold">€399+</div>
+                <ul className="mt-3 space-y-2 text-sm text-white/75">
+                  <li>• 5–15 edited shorts</li>
+                  <li>• Captions + basic branding</li>
+                  <li>• Upload-ready exports</li>
+                </ul>
+              </div>
+            </div>
+
+            <p className="mt-5 text-xs text-white/50">
+              Tip: the fastest way to start is to send 1 video. If you like the output, we move to a weekly batch.
             </p>
           </section>
+
+          <section className="rounded-2xl border border-white/10 bg-black/10 p-4 text-xs text-white/55">
+            <p>
+              Dev setup: export <code className="font-mono text-white/80">OPENAI_API_KEY</code> (optional: <code className="font-mono text-white/80">OPENAI_MODEL</code>), then run
+              <code className="ml-2 font-mono text-white/80">npm run dev</code>
+            </p>
+          </section>
+
+          <footer className="py-2 text-center text-xs text-white/40">
+            Built with Next.js + TypeScript. Internal tool evolving into a productized service.
+          </footer>
         </div>
       </main>
     </div>

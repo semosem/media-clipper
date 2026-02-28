@@ -37,6 +37,7 @@ export default function Home() {
   const [transcript, setTranscript] = useState("");
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(false);
+  const [transcribing, setTranscribing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<Pack | null>(null);
 
@@ -69,6 +70,31 @@ export default function Home() {
       setError(msg);
     } finally {
       setFetching(false);
+    }
+  }
+
+  async function onTranscribeFile(file: File) {
+    setTranscribing(true);
+    setError(null);
+    try {
+      const form = new FormData();
+      form.append("file", file);
+
+      const res = await fetch("/api/transcribe", {
+        method: "POST",
+        body: form,
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json?.error || "Transcription failed");
+      setTranscript(json.transcript);
+    } catch (e: unknown) {
+      const msg =
+        e && typeof e === "object" && "message" in e && typeof (e as { message?: unknown }).message === "string"
+          ? String((e as { message?: unknown }).message)
+          : "Transcription failed";
+      setError(msg);
+    } finally {
+      setTranscribing(false);
     }
   }
 
@@ -199,7 +225,7 @@ export default function Home() {
                     onChange={(e) => setUrl(e.target.value)}
                   />
                   <p className="text-xs text-white/50">
-                    Works when the video has captions. If it fails, use YouTube “Show transcript” and paste manually.
+                    Works when the video has captions. If it fails, upload an audio/video file below and we’ll transcribe it.
                   </p>
                 </div>
 
@@ -229,20 +255,44 @@ export default function Home() {
                 </div>
               </div>
 
-              <label className="grid gap-2">
-                <div className="flex items-end justify-between gap-4">
-                  <span className="text-sm font-medium text-white/80">Transcript (required)</span>
-                  <span className="text-xs text-white/50">
-                    {transcriptStats.words.toLocaleString()} words · {transcriptStats.chars.toLocaleString()} chars
-                  </span>
+              <div className="grid gap-3">
+                <div className="flex flex-wrap items-end justify-between gap-3">
+                  <div>
+                    <div className="text-sm font-medium text-white/80">Transcript (required)</div>
+                    <div className="mt-1 text-xs text-white/50">
+                      {transcriptStats.words.toLocaleString()} words · {transcriptStats.chars.toLocaleString()} chars
+                    </div>
+                  </div>
+
+                  <label className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-xs font-semibold text-white/80 hover:bg-black/30">
+                    <input
+                      type="file"
+                      className="hidden"
+                      accept="audio/*,video/*"
+                      onChange={(e) => {
+                        const f = e.target.files?.[0];
+                        if (f) void onTranscribeFile(f);
+                        // allow selecting same file again
+                        e.currentTarget.value = "";
+                      }}
+                      disabled={transcribing}
+                    />
+                    <span>{transcribing ? "Transcribing…" : "Upload file → Transcribe"}</span>
+                    <span className="text-white/40">(mp3/m4a/mp4)</span>
+                  </label>
                 </div>
+
                 <textarea
                   className="min-h-[240px] resize-y rounded-lg border border-white/10 bg-black/20 p-3 text-sm leading-6 text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-emerald-300/40"
                   placeholder="Paste transcript here…"
                   value={transcript}
                   onChange={(e) => setTranscript(e.target.value)}
                 />
-              </label>
+
+                <p className="text-xs text-white/50">
+                  Tip: exporting audio first (mp3/m4a) is faster/cheaper than uploading full video.
+                </p>
+              </div>
 
               <div className="flex flex-wrap items-center gap-3">
                 <button

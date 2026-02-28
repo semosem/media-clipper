@@ -60,17 +60,17 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 text-zinc-900 dark:bg-black dark:text-zinc-50">
+    <div className="min-h-screen bg-gradient-to-b from-[#23485f] via-[#1e3951] to-[#131e31] text-zinc-50">
       <main className="mx-auto w-full max-w-4xl px-4 py-10">
         <div className="mb-8">
           <h1 className="text-3xl font-semibold tracking-tight">Video Clipper (internal)</h1>
-          <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+          <p className="mt-2 text-sm text-white/70">
             Paste a transcript → generate a content pack (chapters, clips, hooks, posts). No clipping yet—Phase 1.
           </p>
         </div>
 
         <div className="grid gap-6">
-          <section className="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
+          <section className="rounded-xl border border-white/10 bg-black/20 p-5 shadow-sm backdrop-blur">
             <div className="grid gap-4">
               <label className="grid gap-2">
                 <span className="text-sm font-medium">YouTube URL (optional)</span>
@@ -101,7 +101,7 @@ export default function Home() {
                 <button
                   onClick={onGenerate}
                   disabled={loading || transcript.trim().length < 200}
-                  className="inline-flex h-11 items-center justify-center rounded-lg bg-zinc-900 px-4 text-sm font-medium text-white disabled:opacity-50 dark:bg-zinc-100 dark:text-black"
+                  className="inline-flex h-11 items-center justify-center rounded-lg bg-[#23485f] px-4 text-sm font-medium text-white shadow-sm hover:bg-[#1e3951] disabled:opacity-50"
                 >
                   {loading ? "Generating…" : "Generate pack"}
                 </button>
@@ -109,20 +109,20 @@ export default function Home() {
                 <button
                   onClick={downloadJson}
                   disabled={!data}
-                  className="inline-flex h-11 items-center justify-center rounded-lg border border-zinc-200 bg-white px-4 text-sm font-medium disabled:opacity-50 dark:border-zinc-800 dark:bg-black"
+                  className="inline-flex h-11 items-center justify-center rounded-lg border border-white/15 bg-black/10 px-4 text-sm font-medium text-white disabled:opacity-50 hover:bg-black/20"
                 >
                   Download JSON
                 </button>
 
                 {error ? (
-                  <p className="text-sm text-red-600">{error}</p>
+                  <p className="text-sm text-red-200">{error}</p>
                 ) : null}
               </div>
             </div>
           </section>
 
           {data ? (
-            <section className="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
+            <section className="rounded-xl border border-white/10 bg-black/20 p-5 shadow-sm backdrop-blur">
               <div className="mb-4">
                 <h2 className="text-xl font-semibold">Output</h2>
                 {data.title ? (

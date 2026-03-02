@@ -134,6 +134,44 @@ export default function Home() {
     URL.revokeObjectURL(a.href);
   }
 
+  function downloadClipsCsv() {
+    if (!data?.clips?.length) return;
+
+    const header = [
+      "video_url",
+      "title",
+      "start",
+      "end",
+      "hook",
+      "caption",
+      "why",
+    ];
+
+    const esc = (v: string) => {
+      const s = String(v ?? "");
+      // CSV escape: wrap in quotes and double internal quotes
+      return `"${s.replace(/"/g, '""')}"`;
+    };
+
+    const rows = data.clips.map((c) => [
+      esc(url),
+      esc(data.title || ""),
+      esc(c.start || ""),
+      esc(c.end || ""),
+      esc(c.hook || ""),
+      esc(c.caption || ""),
+      esc(c.why || ""),
+    ]);
+
+    const csv = [header.join(","), ...rows.map((r) => r.join(","))].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `clips-${(data.title || "video").slice(0, 40).replace(/\s+/g, "-")}.csv`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#23485f] via-[#1e3951] to-[#131e31] text-zinc-50">
       <main className="mx-auto w-full max-w-4xl px-4 py-10">
@@ -309,6 +347,14 @@ export default function Home() {
                   className="inline-flex h-11 items-center justify-center rounded-lg border border-white/15 bg-black/10 px-4 text-sm font-semibold text-white disabled:opacity-50 hover:bg-black/20"
                 >
                   Download JSON
+                </button>
+
+                <button
+                  onClick={downloadClipsCsv}
+                  disabled={!data?.clips?.length}
+                  className="inline-flex h-11 items-center justify-center rounded-lg border border-white/15 bg-black/10 px-4 text-sm font-semibold text-white disabled:opacity-50 hover:bg-black/20"
+                >
+                  Export clips CSV
                 </button>
 
                 {error ? (
